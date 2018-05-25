@@ -4,6 +4,23 @@
   </header>
 
   <section class="main">
-    
+    <ul class="todo-list">
+
+    </ul>
   </section>
 </section>
+
+<script>
+  $(function() {
+    $.get('/tasks').success(function(data) {
+      var htmlString = "";
+      $.each(data, function(index,  task) {
+        htmlString += '<li><div class="view"><input type="checkbox" class="toggle"><label>' +
+          task.title +
+          '</label></input></div></li>';
+      });
+      var ulTodos = $('.todo-list');
+      ulTodos.html(htmlString);
+    });
+  });
+</script>
