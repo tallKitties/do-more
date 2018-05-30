@@ -16,17 +16,6 @@
 <script>
   $(function() {
 
-    $('#new-form').submit(function(event) {
-      event.preventDefault();
-      var newItem = $('.new-todo');
-      var payload = {
-        task: {
-          title: newItem.val()
-        }
-      };
-      $.post('/tasks', payload)
-    });
-
     function taskHtml(task){
       var checkedStatus = task.done ? "checked" : ''
       var liElement = '<li><div class="view"><input class="toggle" type="checkbox"' +
@@ -51,6 +40,12 @@
       });
     }
 
+    function addItemToUl (htmlString) {
+      var ulTodos = $('.todo-list');
+      ulTodos.append(htmlString);
+      $('.toggle').change(toggleTask);
+    }
+
     $.get('/tasks').success(function(data) {
       var htmlString = "";
 
@@ -58,10 +53,23 @@
         htmlString += taskHtml(task);
       });
 
-      var ulTodos = $('.todo-list');
-      ulTodos.html(htmlString);
-
-      $('.toggle').change(toggleTask);
+      addItemToUl(htmlString);
     });
+
+    $('#new-form').submit(function(event) {
+      event.preventDefault();
+      var newItem = $('.new-todo');
+      var payload = {
+        task: {
+          title: newItem.val()
+        }
+      };
+
+      $.post('/tasks', payload).success(function(data){
+        var htmlString = taskHtml(data);
+        addItemToUl(htmlString);
+      });
+    });
+
   });
 </script>
