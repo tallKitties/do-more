@@ -15,9 +15,13 @@
     $.get('/tasks').success(function(data) {
       var htmlString = "";
       $.each(data, function(index,  task) {
-        htmlString += '<li><div class="view"><input type="checkbox" class="toggle"><label>' +
+        var checkedStatus = task.done ? "checked" : ''
+        var liElement = '<li><div class="view"><input class="toggle" type="checkbox"' +
+          checkedStatus +
+          '><label>' +
           task.title +
-          '</label></input></div></li>';
+          '</label></div></li>';
+        htmlString += liElement;
       });
       var ulTodos = $('.todo-list');
       ulTodos.html(htmlString);
