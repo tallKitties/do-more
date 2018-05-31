@@ -52,6 +52,7 @@ $(function() {
     $.post('/tasks', payload).success(function(data){
       var htmlString = taskHtml(data);
       addItemToUl(htmlString);
+      $('.new-todo').val('');
     });
   });
 });
