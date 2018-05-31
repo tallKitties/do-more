@@ -25,7 +25,7 @@ $(function() {
     }
   }
 
-  function taskHtml(task){
+  function $buildTaskItem(task){
     var $liElement = $addElement('li').attr({
       id: 'listItem-' + task.id
     });
@@ -33,6 +33,12 @@ $(function() {
     $liElement.append($buildTask(task));
 
     return $liElement;
+  }
+
+  function updateTask (task) {
+    var $li = $("#listItem-" + task.id);
+    changeCompletedClass(task, $li);
+    $('.toggle').change(toggleTask);
   }
 
   function toggleTask (e) {
@@ -46,15 +52,13 @@ $(function() {
         done: doneValue
       }
     }).success(function(data) {
-      var $li = $("#listItem-" + data.id);
-      changeCompletedClass(data, $li);
-      $('.toggle').change(toggleTask);
+      updateTask(data);
     });
   }
 
-  function addItemToUl (htmlString) {
+  function addItemToUl ($taskItem) {
     var ulTodos = $('.todo-list');
-    ulTodos.append(htmlString);
+    ulTodos.append($taskItem);
     $('.toggle').change(toggleTask);
   }
 
@@ -62,7 +66,7 @@ $(function() {
 
   $.get('/tasks').success(function(data) {
     $.each(data, function(index,  task) {
-      addItemToUl(taskHtml(task));
+      addItemToUl($buildTaskItem(task));
     });
   });
 
@@ -76,8 +80,8 @@ $(function() {
     };
 
     $.post('/tasks', payload).success(function(data){
-      var htmlString = taskHtml(data);
-      addItemToUl(htmlString);
+      var $taskItem = $buildTaskItem(data);
+      addItemToUl($taskItem);
       $('.new-todo').val('');
     });
   });
