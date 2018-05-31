@@ -39,6 +39,7 @@ group :development, :test do
   gem 'byebug', platform: :mri
   gem 'rspec-rails', '~> 3.5'
   gem "factory_bot_rails"
+  gem 'paloma', '~> 5.1.0'
 end
 
 group :development do
