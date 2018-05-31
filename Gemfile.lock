@@ -87,7 +87,6 @@ GEM
     nio4r (2.3.1)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
-    paloma (5.1.0)
     pg (1.0.0)
     puma (3.11.4)
     rack (2.0.5)
@@ -189,7 +188,6 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   jquery-rails
   listen (~> 3.0.5)
-  paloma (~> 5.1.0)
   pg (>= 0.18, < 2.0)
   puma (~> 3.0)
   rails (~> 5.0.7)
