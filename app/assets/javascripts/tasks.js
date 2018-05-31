@@ -1,17 +1,38 @@
 $(function() {
 
+  function $addElement (tag) {
+    return $(document.createElement(tag))
+  }
+
+  function $buildTask (task) {
+    let $element = $addElement('div').addClass('view').append(
+      $addElement('label').text(task.title).prepend(
+        $addElement('input').attr({
+          class: 'toggle',
+          type: 'checkbox',
+          'data-id': task.id
+        }).prop('checked', task.done)
+      )
+    );
+    return $element;
+  }
+
+  function changeCompletedClass (task, $el) {
+    if (task.done) {
+      $el.addClass('completed');
+    }else if ($el.hasClass('completed')) {
+      $el.removeClass('completed');
+    }
+  }
+
   function taskHtml(task){
-    var checkedStatus = task.done ? "checked" : '';
-    var liClass = task.done ? "completed" : '';
-    var liElement = '<li id="listItem-' + task.id +
-      '" class="' + liClass + '">' +
-      '<div class="view"><input class="toggle" type="checkbox"' +
-      ' data-id="' + task.id + '"' +
-      checkedStatus +
-      '><label>' +
-      task.title +
-      '</label></div></li>';
-    return liElement;
+    var $liElement = $addElement('li').attr({
+      id: 'listItem-' + task.id
+    });
+    changeCompletedClass(task, $liElement);
+    $liElement.append($buildTask(task));
+
+    return $liElement;
   }
 
   function toggleTask (e) {
@@ -25,9 +46,8 @@ $(function() {
         done: doneValue
       }
     }).success(function(data) {
-      var liHtml = taskHtml(data);
       var $li = $("#listItem-" + data.id);
-      $li.replaceWith(liHtml);
+      changeCompletedClass(data, $li);
       $('.toggle').change(toggleTask);
     });
   }
@@ -38,16 +58,12 @@ $(function() {
     $('.toggle').change(toggleTask);
   }
 
-
+// -------
 
   $.get('/tasks').success(function(data) {
-    var htmlString = "";
-
     $.each(data, function(index,  task) {
-      htmlString += taskHtml(task);
+      addItemToUl(taskHtml(task));
     });
-
-    addItemToUl(htmlString);
   });
 
   $('#new-form').submit(function(event) {
